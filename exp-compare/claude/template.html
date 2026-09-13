@@ -1,0 +1,273 @@
+<title>__TITLE__</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@600&display=swap">
+<style>
+:root{
+  --ground:#f5f6f8; --panel:#fff; --sunk:#eceef2;
+  --ink:#14171d; --ink-soft:#5c6470; --ink-faint:#8c939e;
+  --line:#e1e4e9; --line-soft:#eef0f3;
+  --accent:#41618c;
+  --good:#2e7d5b; --warn:#a8751c; --bad:#b04434;
+  --sans:"IBM Plex Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:"IBM Plex Serif","Songti SC","Noto Serif CJK SC",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#14161a; --panel:#1c1f25; --sunk:#22262d;
+    --ink:#e6e8ec; --ink-soft:#939aa6; --ink-faint:#6b717c;
+    --line:#2e323a; --line-soft:#252931;
+    --accent:#83a2d6; --good:#5fb68c; --warn:#d4a24a; --bad:#e07a6b;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#14161a; --panel:#1c1f25; --sunk:#22262d;
+  --ink:#e6e8ec; --ink-soft:#939aa6; --ink-faint:#6b717c;
+  --line:#2e323a; --line-soft:#252931;
+  --accent:#83a2d6; --good:#5fb68c; --warn:#d4a24a; --bad:#e07a6b;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground); color:var(--ink); font-family:var(--sans);
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased}
+.wrap{max-width:1600px; margin:0 auto; padding-inline:20px; padding-block:26px 20px;
+  min-height:100vh; min-height:100dvh; display:flex; flex-direction:column}
+
+h1{font-family:var(--serif); font-weight:600; font-size:26px; letter-spacing:-.02em;
+  margin:0 0 6px; text-wrap:balance}
+.sub{color:var(--ink-soft); margin:0; max-width:74ch}
+.count{font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); margin:10px 0 0}
+
+.bar{flex:none; display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+  padding:10px 0; margin-top:18px; background:var(--ground);
+  border-bottom:1px solid var(--line)}
+.bar label{font-size:10.5px; color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase}
+select,input[type="search"],.bar button{font:inherit; font-size:12.5px; color:var(--ink);
+  background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:5px 9px}
+input[type="search"]{width:128px; font-family:var(--mono)}
+.bar button{cursor:pointer}
+.bar button:disabled{color:var(--ink-faint); cursor:default}
+.bar button:not(:disabled):hover{border-color:var(--accent); color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.pager{display:flex; align-items:center; gap:7px; margin-left:auto}
+.at{font-family:var(--mono); font-size:12px; color:var(--ink-soft);
+  min-width:11ch; text-align:center; font-variant-numeric:tabular-nums}
+
+.scroll{flex:1; min-height:260px; margin-top:14px; overflow:auto;
+  border:1px solid var(--line); border-radius:8px; background:var(--panel)}
+.matrix{display:grid; min-width:max-content}
+.ch{position:sticky; top:0; z-index:10; background:var(--sunk);
+  border-bottom:1px solid var(--line); padding:8px 11px; font-size:12px;
+  font-weight:600; text-align:center; white-space:nowrap}
+.ch.corner{position:sticky; left:0; z-index:12; text-align:left; font-family:var(--mono);
+  font-weight:400; font-size:10.5px; color:var(--ink-faint);
+  letter-spacing:.06em; text-transform:uppercase}
+.rh{position:sticky; left:0; z-index:5; background:var(--panel);
+  border-bottom:1px solid var(--line-soft); border-right:1px solid var(--line);
+  padding:10px 11px; display:flex; flex-direction:column; gap:2px; justify-content:center}
+.rh .sid{font-family:var(--mono); font-size:11.5px; color:var(--ink-soft); white-space:nowrap}
+.rh .m{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint);
+  font-variant-numeric:tabular-nums; white-space:nowrap}
+.cell{border-bottom:1px solid var(--line-soft); border-right:1px solid var(--line-soft);
+  padding:8px; display:flex; flex-direction:column; align-items:center; gap:5px;
+  background:var(--panel); justify-content:center}
+.cell img{display:block; width:100%; height:auto; border-radius:5px; cursor:zoom-in;
+  background:var(--sunk)}
+.cell .note{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint);
+  text-align:center; font-variant-numeric:tabular-nums; line-height:1.45}
+.cell.blank{background:repeating-linear-gradient(45deg,transparent,transparent 6px,
+  var(--line-soft) 6px,var(--line-soft) 7px)}
+.matrix>:last-child,.matrix>.cell:last-child{border-right:0}
+.none{padding:44px; text-align:center; color:var(--ink-faint); grid-column:1/-1}
+
+.lb{position:fixed; inset:0; z-index:100; background:rgba(10,12,16,.96);
+  display:grid; grid-template-rows:auto 1fr auto; gap:10px; padding:14px}
+.lb[hidden]{display:none!important}
+.lb-top{display:flex; align-items:center; justify-content:space-between; gap:14px; color:#e9ebee}
+.lb-id{font-family:var(--mono); font-size:12.5px}
+.lb-id b{color:#fff; font-weight:500}
+.lb-x{background:rgba(255,255,255,.12); border:0; color:#e9ebee; border-radius:6px;
+  padding:4px 11px; cursor:pointer; font:inherit; font-size:12.5px}
+.lb-x:hover{background:rgba(255,255,255,.24)}
+.lb-stage{display:grid; place-items:center; min-height:0}
+.lb-stage img{max-width:100%; max-height:100%; object-fit:contain; border-radius:8px}
+.lb-foot{display:flex; justify-content:center; gap:7px; align-items:center; flex-wrap:wrap}
+.lb-tab{background:rgba(255,255,255,.1); border:0; color:#c9ced6; border-radius:6px;
+  padding:4px 13px; cursor:pointer; font:inherit; font-size:12.5px}
+.lb-tab[aria-pressed="true"]{background:#fff; color:#14171d; font-weight:500}
+.lb-hint{color:#8d949e; font-size:11px; margin-left:10px}
+
+@media (max-width:560px){
+  .wrap{padding-block:18px 16px}
+  .lb-hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <h1 id="title"></h1>
+  <p class="sub" id="sub"></p>
+  <p class="count" id="count"></p>
+
+  <div class="bar">
+    <label for="sortSel" id="sortLab" hidden>排序</label>
+    <select id="sortSel" hidden></select>
+    <input type="search" id="q" placeholder="筛选" aria-label="按名称筛选">
+    <select id="size" aria-label="每页数量">
+      <option value="20">20 / 页</option>
+      <option value="50" selected>50 / 页</option>
+      <option value="100">100 / 页</option>
+      <option value="0">全部</option>
+    </select>
+    <div class="pager">
+      <button id="prev" type="button">‹</button>
+      <span class="at" id="at"></span>
+      <button id="next" type="button">›</button>
+    </div>
+  </div>
+
+  <div class="scroll"><div class="matrix" id="matrix"></div></div>
+</div>
+
+<div class="lb" id="lb" hidden>
+  <div class="lb-top">
+    <span class="lb-id" id="lbId"></span>
+    <button class="lb-x" id="lbX" type="button">关闭 Esc</button>
+  </div>
+  <div class="lb-stage"><img id="lbImg" alt=""></div>
+  <div class="lb-foot" id="lbTabs"></div>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const $ = (id) => document.getElementById(id);
+const COLS = D.columns;
+
+document.title = D.title;
+$('title').textContent = D.title;
+$('sub').textContent = D.subtitle || '';
+if (!D.subtitle) $('sub').hidden = true;
+$('count').textContent = `${D.rows.length} 行 × ${COLS.length} 列`;
+
+/* metric keys, if the spec carried any -> offer sorting */
+const keys = [...new Set(D.rows.flatMap((r) => Object.keys(r.metrics)))];
+if (keys.length) {
+  $('sortSel').hidden = $('sortLab').hidden = false;
+  $('sortSel').innerHTML = '<option value="">原顺序</option>' +
+    keys.map((k) => `<option value="${k}|asc">${k} 低→高</option>` +
+                    `<option value="${k}|desc">${k} 高→低</option>`).join('');
+}
+
+let size = 50, page = 0, view = D.rows;
+
+function apply() {
+  const q = $('q').value.trim().toLowerCase();
+  view = q ? D.rows.filter((r) => r.label.toLowerCase().includes(q)) : D.rows;
+  const s = $('sortSel').value;
+  if (s) {
+    const [k, dir] = s.split('|');
+    const val = (r) => (k in r.metrics ? r.metrics[k] : dir === 'asc' ? Infinity : -Infinity);
+    view = [...view].sort((a, b) => dir === 'asc' ? val(a) - val(b) : val(b) - val(a));
+  }
+  page = 0;
+  draw();
+}
+
+function draw() {
+  const total = size ? Math.max(1, Math.ceil(view.length / size)) : 1;
+  page = Math.min(page, total - 1);
+  const slice = size ? view.slice(page * size, (page + 1) * size) : view;
+
+  const m = $('matrix');
+  const cw = COLS.length > 4 ? 190 : 260;
+  m.style.gridTemplateColumns = `minmax(96px,auto) repeat(${COLS.length},minmax(110px,${cw}px))`;
+
+  const frag = document.createDocumentFragment();
+  const div = (cls, txt) => {
+    const d = document.createElement('div');
+    d.className = cls;
+    if (txt !== undefined) d.textContent = txt;
+    return d;
+  };
+  frag.appendChild(div('ch corner', 'sample'));
+  for (const c of COLS) frag.appendChild(div('ch', c));
+
+  if (!slice.length) frag.appendChild(div('none', '没有符合条件的行'));
+
+  for (const r of slice) {
+    const rh = div('rh');
+    rh.appendChild(Object.assign(div('sid'), { textContent: r.label }));
+    for (const [k, v] of Object.entries(r.metrics)) {
+      rh.appendChild(div('m', `${k} ${typeof v === 'number' ? (+v).toFixed(3) : v}`));
+    }
+    frag.appendChild(rh);
+
+    r.cells.forEach((cell, ci) => {
+      if (!cell) { frag.appendChild(div('cell blank')); return; }
+      const box = div('cell');
+      const img = document.createElement('img');
+      img.src = cell.u;
+      img.alt = `${r.label} · ${COLS[ci]}`;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.addEventListener('click', () => openLb(r, ci));
+      box.appendChild(img);
+      if (cell.n) box.appendChild(div('note', cell.n));
+      frag.appendChild(box);
+    });
+  }
+  m.replaceChildren(frag);
+
+  $('at').textContent = size ? `${page + 1} / ${total} · ${view.length}` : `${view.length} 行`;
+  $('prev').disabled = page === 0;
+  $('next').disabled = page >= total - 1;
+}
+
+/* lightbox — left/right A/B the same row, up/down move between rows */
+let lbRow = null, lbCol = 0;
+$('lbTabs').innerHTML =
+  COLS.map((c, i) => `<button class="lb-tab" type="button" data-i="${i}">${c}</button>`).join('')
+  + '<span class="lb-hint">← → 切换对比列 · ↑ ↓ 换行 · Esc 关闭</span>';
+
+function paintLb() {
+  const cell = lbRow.cells[lbCol];
+  $('lbImg').src = cell ? cell.u : '';
+  $('lbImg').alt = `${lbRow.label} · ${COLS[lbCol]}`;
+  const bits = Object.entries(lbRow.metrics)
+    .map(([k, v]) => `${k} ${typeof v === 'number' ? (+v).toFixed(3) : v}`);
+  $('lbId').innerHTML = `<b>${lbRow.label}</b> · ${COLS[lbCol]}`
+    + (cell && cell.n ? ` · ${cell.n}` : '')
+    + (bits.length ? ` · ${bits.join(' · ')}` : '')
+    + (cell ? '' : ' · (无图)');
+  $('lbTabs').querySelectorAll('.lb-tab').forEach((b, i) =>
+    b.setAttribute('aria-pressed', String(i === lbCol)));
+}
+function openLb(row, ci) { lbRow = row; lbCol = ci; $('lb').hidden = false; paintLb(); }
+function closeLb() { $('lb').hidden = true; $('lbImg').removeAttribute('src'); }
+
+$('lbX').addEventListener('click', closeLb);
+$('lb').addEventListener('click', (e) => { if (e.target.id === 'lb') closeLb(); });
+$('lbTabs').addEventListener('click', (e) => {
+  const b = e.target.closest('.lb-tab');
+  if (b) { lbCol = +b.dataset.i; paintLb(); }
+});
+addEventListener('keydown', (e) => {
+  if ($('lb').hidden) return;
+  if (e.key === 'Escape') return closeLb();
+  const n = COLS.length;
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); lbCol = (lbCol - 1 + n) % n; paintLb(); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); lbCol = (lbCol + 1) % n; paintLb(); }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    const i = view.indexOf(lbRow);
+    lbRow = view[Math.min(Math.max(i + (e.key === 'ArrowDown' ? 1 : -1), 0), view.length - 1)];
+    paintLb();
+  }
+});
+
+$('prev').addEventListener('click', () => { page--; draw(); scrollTo({ top: 0 }); });
+$('next').addEventListener('click', () => { page++; draw(); scrollTo({ top: 0 }); });
+$('size').addEventListener('change', () => { size = +$('size').value; page = 0; draw(); });
+for (const id of ['sortSel', 'q']) $(id).addEventListener('input', apply);
+
+apply();
+</script>

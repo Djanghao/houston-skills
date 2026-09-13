@@ -1,0 +1,57 @@
+/* Shell chrome only — each page in pages/ styles itself. */
+:root{
+  --ground:#f5f6f8; --panel:#fff; --sunk:#eceef2;
+  --ink:#14171d; --ink-soft:#5c6470; --ink-faint:#8c939e;
+  --line:#e1e4e9; --accent:#41618c;
+  --sans:"IBM Plex Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#14161a; --panel:#1c1f25; --sunk:#22262d;
+    --ink:#e6e8ec; --ink-soft:#939aa6; --ink-faint:#6b717c;
+    --line:#2e323a; --accent:#83a2d6;
+  }
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+html{color-scheme:light dark}
+body{margin:0; display:flex; flex-direction:column; background:var(--ground);
+  color:var(--ink); font-family:var(--sans); font-size:14px; line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+
+.top{flex:none; display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:11px 20px; background:var(--panel); border-bottom:1px solid var(--line)}
+.top h1{margin:0; font-size:14.5px; font-weight:600; letter-spacing:-.01em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.actions{display:flex; align-items:center; gap:8px; flex:none}
+.stamp{font-family:var(--mono); font-size:11px; color:var(--ink-faint)}
+.btn{width:28px; height:28px; display:grid; place-items:center; flex:none;
+  border:1px solid var(--line); border-radius:6px; background:var(--panel);
+  color:var(--ink-soft); font-size:13px; line-height:1; cursor:pointer; text-decoration:none}
+.btn:hover{border-color:var(--accent); color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.tabs{flex:none; display:flex; gap:2px; padding:0 14px; background:var(--panel);
+  border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:thin}
+.tab{appearance:none; border:0; background:none; cursor:pointer; font:inherit;
+  color:var(--ink-soft); padding:8px 13px 9px; white-space:nowrap;
+  border-bottom:2px solid transparent; display:flex; align-items:center; gap:7px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--accent); font-weight:500}
+.live{width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:.5; flex:none}
+.when{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint)}
+
+.stage{flex:1; position:relative; min-height:0}
+.stage iframe{position:absolute; inset:0; width:100%; height:100%; border:0; background:var(--ground)}
+.stage iframe[hidden]{display:none!important}
+.status{position:absolute; inset:0; display:grid; place-content:center; gap:10px;
+  text-align:center; color:var(--ink-faint); padding:24px}
+.status code{font-family:var(--mono); font-size:12.5px; background:var(--sunk);
+  color:var(--ink-soft); padding:2px 7px; border-radius:5px}
+.status.gone{display:none}
+.spin{width:20px; height:20px; margin:0 auto; border:2px solid var(--line);
+  border-top-color:var(--accent); border-radius:50%; animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+@media (max-width:600px){.top{padding:10px 14px} .stamp,.when{display:none} .tabs{padding:0 8px}}

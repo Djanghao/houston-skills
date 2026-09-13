@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experiment Gallery</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect x='2' y='2' width='5' height='5' rx='1' fill='%2341618c'/><rect x='9' y='2' width='5' height='5' rx='1' fill='%2341618c' opacity='.55'/><rect x='2' y='9' width='5' height='5' rx='1' fill='%2341618c' opacity='.55'/><rect x='9' y='9' width='5' height='5' rx='1' fill='%2341618c' opacity='.3'/></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="shell.css">
+</head>
+<body>
+<header class="top">
+  <h1 id="site">Experiment Gallery</h1>
+  <div class="actions">
+    <span class="stamp" id="stamp"></span>
+    <a class="btn" id="solo" target="_blank" rel="noopener" title="单独打开当前页" hidden>↗</a>
+    <button class="btn" id="again" type="button" title="重新加载当前页">⟳</button>
+  </div>
+</header>
+<nav class="tabs" id="tabs" role="tablist" aria-label="对比页"></nav>
+<main class="stage" id="stage"><div class="status" id="status">加载中…</div></main>
+<script src="shell.js"></script>
+</body>
+</html>
