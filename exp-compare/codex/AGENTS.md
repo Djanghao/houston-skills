@@ -15,6 +15,12 @@ directory with `ls`/`find`/`glob`, work out where each image is, and write the
 spec. `pack.py` only resolves paths, re-encodes images, and renders — all the
 judgement lives in the spec you write.
 
+## Setup
+
+`pip install pillow` is the only dependency for packing. The Vercel route also
+needs `npm i -g vercel` and a token in `$VERCEL_TOKEN` or
+`~/.config/vercel-token`. Install what's missing when a command complains.
+
 ## Flow
 
 1. **Explore.** Find where each (sample, method) image lives, and where
