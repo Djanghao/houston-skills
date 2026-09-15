@@ -31,15 +31,30 @@ token in `$VERCEL_TOKEN` or `~/.config/vercel-token`.
 **Claude gets both routes; Codex only the Vercel one**, since it cannot publish
 Artifacts.
 
+### research-repo-hygiene
+
+The structure that keeps an experiment repository readable: what `docs/` must
+contain, which pages are living and what changes them, when an idea earns its
+own branch, and what to archive versus delete when a direction is abandoned.
+
+No scripts — it is one instruction file. Read it when starting a repo, when a
+scratch directory has accumulated, when closing out an investigation, or when a
+session cannot tell what has already been tried.
+
 ## Install
 
 ```bash
 git clone https://github.com/Djanghao/houston-skills ~/houston-skills
 
 # Claude Code — available from any directory
-ln -sfn ~/houston-skills/exp-compare/claude ~/.claude/skills/exp-compare
+ln -sfn ~/houston-skills/exp-compare/claude          ~/.claude/skills/exp-compare
+ln -sfn ~/houston-skills/research-repo-hygiene/claude ~/.claude/skills/research-repo-hygiene
 
-# Codex — add a pointer to the global instructions
-echo 'For experiment image comparisons, follow
-~/houston-skills/exp-compare/codex/AGENTS.md' >> ~/.codex/AGENTS.md
+# Codex — add pointers to the global instructions
+cat >> ~/.codex/AGENTS.md <<'EOF'
+For experiment image comparisons, follow
+~/houston-skills/exp-compare/codex/AGENTS.md
+For project structure and experiment hygiene, follow
+~/houston-skills/research-repo-hygiene/codex/AGENTS.md
+EOF
 ```
